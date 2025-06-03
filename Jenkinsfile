@@ -20,7 +20,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo 'Cloning repository...'
-                git url: 'https://github.com/RamKrishrk/interview-adamsbridge.git'
+                git branch: 'main', url: 'https://github.com/RamKrishrk/interview-adamsbridge.git'
             }
         }
 
