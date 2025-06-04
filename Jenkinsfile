@@ -5,9 +5,9 @@ pipeline {
         IMAGE_NAME = "ram14devops/${APP_NAME}:latest"
         DOCKERHUB_CREDENTIALS = 'dockerhub-credential' // Jenkins credential ID
         SSH_KEY_ID = 'ec2-ssh-key'           // SSH key stored in Jenkins
-        EC2_USER = 'ec2-user'                               // or 'ubuntu' for Ubuntu
-        EC2_HOST = '54.167.72.221'                     // EC2 public IP or DNS
-        APP_PORT = '3000'                                   // Change based on your app
+        EC2_USER = 'ec2-user'                               // ec2 username
+        EC2_HOST = '54.167.72.221'                     // EC2 public IP 
+        APP_PORT = '3000'                                   // app port
     }
     options {
         timestamps()
