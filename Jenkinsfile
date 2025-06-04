@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         APP_NAME = 'nodeapp'
         IMAGE_NAME = "ram14devops/${APP_NAME}:latest"
@@ -10,12 +9,10 @@ pipeline {
         EC2_HOST = '54.167.72.221'                     // EC2 public IP or DNS
         APP_PORT = '3000'                                   // Change based on your app
     }
-
     options {
         timestamps()
         skipStagesAfterUnstable()
     }
-
     stages {
         stage('Checkout Code') {
             steps {
@@ -23,7 +20,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/RamKrishrk/interview-adamsbridge.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image: ${IMAGE_NAME}"
@@ -32,7 +28,6 @@ pipeline {
                 }
             }
         }
-
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing image to Docker Hub...'
@@ -43,24 +38,22 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to EC2') {
             steps {
                 echo 'Deploying to EC2...'
                 sshagent (credentials: [SSH_KEY_ID]) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << 'EOF'
-                        docker pull ${IMAGE_NAME}
-                        docker stop ${APP_NAME} || true
-                        docker rm ${APP_NAME} || true
+                    ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                        docker pull ${IMAGE_NAME} && \
+                        docker stop ${APP_NAME} || true && \
+                        docker rm ${APP_NAME} || true && \
                         docker run -d --name ${APP_NAME} -p 80:${APP_PORT} ${IMAGE_NAME}
-                    EOF
+                    '
                     """
                 }
             }
         }
     }
-
     post {
         success {
             echo 'CI/CD Pipeline completed successfully.'
